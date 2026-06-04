@@ -4,6 +4,7 @@ using TMPro;
 
 public class SearchScript : MonoBehaviour
 {
+    #region Declaring variables
     [SerializeField]
     private int delayMax = 2;
 
@@ -13,6 +14,9 @@ public class SearchScript : MonoBehaviour
     [SerializeField]
     private Button searchButton;
 
+    [SerializeField]
+    private GameObject Particles;
+
     public TextMeshProUGUI lootText;
 
     [Header("Threshhold")]
@@ -21,10 +25,14 @@ public class SearchScript : MonoBehaviour
 
     private int loot;
 
+    #endregion
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Button searchButton = GetComponent<Button>();
+
+        Particles = GameObject.Find("ParticleHolder");
 
         // unity documentation has this in start
         searchButton.onClick.AddListener(SearchFunction);
@@ -57,16 +65,31 @@ public class SearchScript : MonoBehaviour
         {
             lootText.color = Color.white;
             lootText.text = "You Found a Useful Item";
+            VictoryEnd();
         }
         else if (loot < trash)
         {
             lootText.color = Color.gray;
             lootText.text = "You Found Unusable Trash...";
+            VictoryEnd();
         }
         else
         {
-            lootText.color = Color.yellow;
-            lootText.text = "You Found Treasure!";
+            Victory();
         }
+    }
+
+    void Victory()
+    {
+        lootText.color = Color.yellow;
+        lootText.text = "You Found Treasure!";
+        Particles.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        Particles.gameObject.transform.GetChild(1).gameObject.SetActive(true);
+    }
+
+    void VictoryEnd()
+    {
+        Particles.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        Particles.gameObject.transform.GetChild(1).gameObject.SetActive(false);
     }
 }
